@@ -16,9 +16,9 @@ class mainTest(TestCase):
 
     def test_availability_gadget(self):
         gadget = Product.objects.create(
-          name ="Asus ROG Zephyrus G14",
-          price = 2500,
-          description = "AMD Ryzen 9 8945 HS, RTX 4060, 32 GB ram",
-          stock = 8,
+            name='Asus ROG',
+            price=2500,
+            description='AMD Ryzen 9 8945 HS, RTX 4060, 32 GB ram',
+            stock=8
         )
-        self.assertTrue(gadget.is_available())
+        self.assertTrue(gadget.is_available)
