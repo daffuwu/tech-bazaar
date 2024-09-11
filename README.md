@@ -258,3 +258,17 @@
     ...
     ```
 - Jalankan perintah yang terdapat pada informasi Project Command pada halaman PWS.
+
+## Bagan
+![bagan](bagan.png)
+
+## Fungsi Git Dalam Pengembangan Perangkat Lunak
+- Menyimpan *history* perubahan dalam suatu proyek.
+- Menggabungkan dua kondisi proyek berbeda (*branch* berbeda). 
+- Untuk mempermudah kerja sama tim.
+
+## Kenapa Django?
+Django memiliki komponen yang jelas dan mudah diterapkan. Django juga memiliki banyak fitur yang sangat berguna dalam pengembangan proyek. Django sangat cocok untuk pemula.
+
+## Alasan Model Django disebut Sebagai ORM
+ORM (Object-relational Mapping) adalah teknik pemrograman untuk mengkonversi data antara *relational database* dan bahasa pemrograman yang menerapkan *object-oriented programming* (OOP) seperti python. Model Django berfungsi sebagai penghubung antara objek dalam kode python dengan *relational database*. Salah satu contohnya, kita dapat lihat berkas `urls.py`yang melakukan routing ke *database*. Dengan ini, model Django dapat disebut sebagai ORM.
