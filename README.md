@@ -1,5 +1,8 @@
 # Tech Bazaar
-## Langkah-langkah mengimplementasikan *checklist* pada tugas 2
+- [Tugas 2](#tugas-2)
+- [Tugas 3](#tugas-3)
+## Tugas 2
+### Langkah-langkah mengimplementasikan *checklist* pada tugas 2
 - Buat  *virtual environment* dengan menjalankan perintah `python -m venv env` pada direktori yang diiginkan. Misal di direktori `tech-bazaar`.
 - Aktifkan *virtual environment* dengan perintah `env\Scripts\activate`.
 - Di dalam direktori yang sama, buat berkas `requirements.txt` dan tambahkan beberapa *dependencies*.
@@ -259,16 +262,69 @@
     ```
 - Jalankan perintah yang terdapat pada informasi Project Command pada halaman PWS.
 
-## Bagan
-![bagan](bagan.png)
+### Bagan
+![bagan](images/bagan.png)
 
-## Fungsi Git Dalam Pengembangan Perangkat Lunak
+### Fungsi Git Dalam Pengembangan Perangkat Lunak
 - Menyimpan *history* perubahan dalam suatu proyek.
 - Menggabungkan dua kondisi proyek berbeda (*branch* berbeda). 
 - Untuk mempermudah kerja sama tim.
 
-## Kenapa Django?
+### Kenapa Django?
 Django memiliki komponen yang jelas dan mudah diterapkan. Django juga memiliki banyak fitur yang sangat berguna dalam pengembangan proyek. Django sangat cocok untuk pemula.
 
-## Alasan Model Django disebut Sebagai ORM
+### Alasan Model Django disebut Sebagai ORM
 ORM (Object-relational Mapping) adalah teknik pemrograman untuk mengkonversi data antara *relational database* dan bahasa pemrograman yang menerapkan *object-oriented programming* (OOP) seperti python. Model Django berfungsi sebagai penghubung antara objek dalam kode python dengan *relational database*. Salah satu contohnya, kita dapat lihat berkas `urls.py`yang melakukan routing ke *database*. Dengan ini, model Django dapat disebut sebagai ORM.
+
+## Tugas 3
+### Jelaskan mengapa kita memerlukan *data delivery* dalam pengimplementasian sebuah platform?
+*Data delivery* diperlukan dalam pengembangan platform dikarenakan kebutuhan untuk mengirim, menerima, dan meproses informasi pada platform. Salah satu contohnya adalah proses *HTTP request* dan *HTTP response*, diperlukan *data delivery* untuk mengirim permintaan pengguna dan merespon permintaan tersebut pada *browser*.
+
+### Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+Menurut saya sendiri JSON lebih baik daripada XML karena kode JSON cenderung lebih pendek. Ada beberapa alasan JSON lebih populer dibandingkan XML:
+1. JSON dapat di-*parse* dengan fungsi *JavaScript* standar, sedangkan untuk *parse* XML, diperlukan XML *parser*.
+2. JSON lebih sederhana dan fleksibel.
+3. JSON memiliki ukuran *file* yang lebih kecil dan pengiriman data yang lebih cepat jika dibandingkan dengan XML.
+
+### Jelaskan fungsi dari method `is_valid()` pada form Django dan mengapa kita membutuhkan method tersebut?
+Fungsi dari method`is_valid` pada form Django adalah untuk memvalidasi form yang diisi pengguna pada *browser*. Method diperlukan karena bisa saja pengguna mengisi data yang tidak valid pada form, misalnya seperti string kosong.
+
+### Mengapa kita membutuhkan `csrf_token` saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan `csrf_token` pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+Kita membutuhkan `csrf_token` saat membuat form di Django untuk menghindari serangan CSRF yang cukup berbahaya. Jika kita tidak menambahkan `csrf_token` pada form Django, kita bisa saja diarahkan ke web palsu oleh penyerang. Penyerang dapat memanfaatkan tidak adanya `csrf_token` dengan memberikan tautan dalam bentuk form. Dengan ini, penyerang dapat menipu pengguna dengan melakukan beberapa aksi, seperti transfer dana, pengubahan alamat email, dan lain-lain. 
+
+### Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+1. Membuat input `form` untuk menambahkan objek model pada app sebelumnya.
+    * Buat berkas [`main/forms.py`](main/forms.py) untuk mendefinisikan input form. 
+    * Tambahkan fungsi `create_product()` pada berkas [`main/views.py`](main/views.py) sebagai fungsi untuk menambahkan objek ketika menerima form. 
+    * Tambahkan dan perbarui berkas template [`templates/base.html`](templates/base.html), [`main/templates/main.html`](main/templates/main.html), dan [`main/templates/create_product.html`](main/templates/create_product.html) untuk menampilkan informasi-informasi pada web.
+2. Tambahkan 4 fungsi `views` baru untuk melihat objek yang sudah ditambahkan dalam format XML, JSON, XML *by ID*, dan JSON *by ID*.
+    * Cukup tambahkan fungsi `show_xml()`, `show_json()`, `show_xml_by_id()`, dan `show_json_by_id()` pada berkas [`main/views.py`](main/views.py) untuk menampilkan objek dalam format XML atau JSON.
+3. Membuat routing URL untuk masing-masing `views` yang telah ditambahkan pada poin 2.
+    * Pada berkas [`main/urls.py`](main/urls.py), impor 4 fungsi `show_xml()`, `show_json()`, `show_xml_by_id()`, dan `show_json_by_id()` yang telah didefinisikan pada berkas [`main/views.py`](main/views.py) sebelumnya.
+    * Di dalam list `urlspatterns`, tambahkan:
+        * ```py
+            path('xml/', show_xml, name='show_xml')
+            ```
+            untuk melihat objek dalam format XML;
+        * ```py
+            path('json/', show_json, name='show_json')
+            ```
+            untuk melihat objek dalam format JSON;
+        * ```py
+            path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id')
+            ```
+            untuk melihat objek dalam format XML *by id*;
+        * ```py
+            path('json/<str:id>/', show_json_by_id, name='show_json_by_id')
+            ```
+            untuk melihat objek dalam format JSON *by id*.
+
+### Hasil keempat URL di poin 2 menggunakan Postman
+1. Hasil XML
+![xml](images/xml-postman.png)
+2. Hasil JSON
+![json](images/json-postman.png)
+3. Hasil XML *by id*
+![xml-by-id](images/xml-by-id-postman.png)
+4. Hasil JSON *by id*
+![json-by-id](images/json-by-id-postman.png)

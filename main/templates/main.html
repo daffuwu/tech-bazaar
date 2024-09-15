@@ -1,8 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>Tech Bazaar</h1>
 
 <h5>App Name: </h5>
-<p>{{ app_name }}</p> 
-<h5>Name: </h5>
-<p>{{ name }}</p> 
-<h5>Class: </h5>
+<p>{{ app_name }}<p>
+
+<h5>Name:</h5>
+<p>{{ name }}</p>
+
+<h5>Class:</h5>
 <p>{{ class }}</p>
+{% if not products %}
+<p>Belum ada data produk pada Tech Bazaar.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Stock</th>
+  </tr>
+
+  {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini 
+  {% endcomment %} 
+  {% for product in products %}
+  <tr>
+    <td>{{product.name}}</td>
+    <td>{{product.price}}</td>
+    <td>{{product.description}}</td>
+    <td>{{product.stock}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_product' %}">
+  <button>Add New Product</button>
+</a>
+{% endblock content %}
