@@ -1,6 +1,8 @@
 # Tech Bazaar
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
+- [Tugas 4](#tugas-4)
+- [Tugas 5](#tugas-5)
 ## Tugas 2
 ### Langkah-langkah mengimplementasikan *checklist* pada tugas 2
 - Buat  *virtual environment* dengan menjalankan perintah `python -m venv env` pada direktori yang diiginkan. Misal di direktori `tech-bazaar`.
@@ -328,3 +330,160 @@ Kita membutuhkan `csrf_token` saat membuat form di Django untuk menghindari sera
 ![xml-by-id](images/xml-by-id-postman.png)
 4. Hasil JSON *by id*
 ![json-by-id](images/json-by-id-postman.png)
+
+## Tugas 4
+### Apa perbedaan antara `HttpResponseRedirect()` dan `redirect()`?
+`HttpResponseRedirect()` hanya menerima argumen URL, sedangkan `redirect()` dapat menerima argumen yang lebih fleksibel.
+Contohnya dapat kita lihat pada berkas [`main/views.py`](main/views.py). 
+- `return redirect('main:show_main')`
+
+    `redirect()` dapat menerima argumen `main:show_main` yang merupakan URL yang telah didefinisikan pada [`main/urls.py`](main/urls.py).
+- `response = HttpResponseRedirect(reverse("main:show_main"))`
+
+    Argumen yang diterima `HttpResponseRedirect()` diberi method `reverse()` untuk mengubah `main:show_main` menjadi *literal URL*.
+
+### Jelaskan cara kerja penghubungan model `Product` dengan `User`!
+Untuk mengubungkan  model `Product` dengan `User`, kita dapat menambahkan potongan kode berikut di dalam *class* `Product` pada berkas [`main/mmodels.py`](main/models.py).
+```py
+class Product(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ...
+```
+Potongan kode tersebut berfungsi untuk menghubungkan satu *product* dengan satu *user* melalui sebuah *relationship*. 
+
+Jika model `Product` dan `User` telah terhubung, kita dapat melihat beberapa *product* yang dibuat satu *user* di dalam suatu sesi *login*.
+
+### Apa perbedaan antara *authentication* dan *authorization*, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+*Authentication* adalah proses untuk memverifikasi identitas pengguna, sedangkan *authorization* adalah proses setelah pengguna menjalankan *authentication* untuk meminta izin (*permissions*) dari pengguna tersebut.
+
+1. Implementasi Authorization dalam Django
+
+    Django memiliki modul `django.contrib.auth` untuk melakukan *authentication*. Method *authentcation* yang digunakan pada tugas 4 kali ini adalah `login()` dan `logout()` yang terdapat pada berkas [`main/views.py`](main/views.py).
+
+2. Implementasi Authorization dalam Django
+
+    Proses *Authorization* pada Django dilakukan melalui *decorator* seperti `@login_required` yang terdapat pada berkas [`main/views.py`](main/views.py).
+
+### Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Django mengingat pengguna yang telah login dengan melakukan *holding state*. *Session ID* akan disimpan sebagai *cookie* pada komputer klien. *Session ID* ini berfungsi untuk mengidentifikasi pengguna yang *login*.
+
+Selain untuk menyimpan *Session ID*, *cookie* memiliki fungsi lain sebagai berikut.
+- Menyimpan token CSRF untuk menghindari serangan CSRF.
+- Melacak aktivitas pengguna di situ web.
+- Menyimpan preferensi pengguna.
+
+Tidak semua *cookies* aman digunakan, contohnya *cookies* tanpa enkripsi yang dikirim melalui HTTP.
+
+### Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+1. Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna untuk mengakses aplikasi sebelumnya dengan lancar.
+    * Membuat fungsi `register()`, `login_user()`, dan `logout_user()` pada berkas [`main/views.py`](main/views.py).
+
+2. Membuat **dua** akun pengguna dengan masing-masing **tiga** dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun *di lokal*.
+    * Aktifkan *virtual environtment*, lalu buka http://localhost:8000/ pada browser. 
+    * Buat dua akun dengan melakukan registrasi.
+    * Login pada setiap akun dan tambahkan tiga produk.
+
+3. Menghubungkan model `Product` dengan `User`.
+    * Impor modul `User` dari `django.contrib.auth.models` pada berkas [`main/mmodels.py`](main/models.py).
+    * Tambahkan potongan kode berikut di dalam *class* `Product` pada berkas [`main/mmodels.py`](main/models.py).
+        ```py
+        class Product(models.Model):
+            user = models.ForeignKey(User, on_delete=models.CASCADE)
+            ...
+        ```
+
+4. Menampilkan detil informasi pengguna yang sedang *logged in* seperti *username* dan menerapkan cookies seperti `last login` pada halaman utama aplikasi.
+    * Buka berkas [`main/views.py`](main/views.py).
+    * Impor modul `datetime` untuk informasi waktu, `HttpResponseRedirect` dari `django.http` untuk *redirect* ke suatu URL sekaligus membuat respons, dan `reverse` dari `django.urls` untuk membuat *URL template*.
+    * Pada fungsi `login_user()`, buatlah respons yang *redirect* ke `main:show_main` menggunakan `HttpResponseRedirect()` ketika seorang pengguna *login* (Jangan lupa gunakan `reverse()` untuk membuat URL template pada argumen `HttpResponseRedirect()`). Tambahkan `cookies` pada respons yang dibuat dengan informasi `last_login`.
+    * Pada fungsi `logout_user()`, ketika seorang pengguna *logout*, informasi `last_login` dihapus dari *cookies*.
+    * Jangan lupa, pada berkas [main.html](main/templates/main.html), tampilkan informasi `last_login`.
+
+## Tugas 5
+### Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+CSS akan menerapkan selector dengan urutan prioritas berikut (dari prioritas tertinggi).
+1. *Inline style*
+2. *External* dan *internal style sheets*
+3.  *Browser default*
+
+### Mengapa *responsive design* menjadi konsep yang penting dalam pengembangan aplikasi *web*? Berikan contoh aplikasi yang sudah dan belum menerapkan *responsive design*!
+*Responsive design* diperlukan agar web dapat memberikan tampilan yang sesuai dengan ukuran layar perangkat yang berbeda.
+
+Contoh aplikasi yang sudah menerapkan *responsive design* adalah [osu.ppy.sh](https://osu.ppy.sh/), sedangkan yang belum menerapkan hal tersebut salah satunya adalah [old.ppy.sh](https://old.ppy.sh/).
+
+### Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+![box-model](images/box-model.png)
+- Padding: area di sekitar konten.
+- Border: garis tepian yang membungkus konten dan padding-nya
+- Margin: area di sekitar border.
+
+Salah satu cara untuk mengimplementasikan ketiga hal tersebut adalah menggunakan CSS. Kita dapat mendefinisikan ketiga hal tersebut pada kolom `style` pada berkas HTML. Berikut contoh potongan kode untuk mengimplementasikannya.
+
+```html
+<style>
+    ...
+    .box {
+        margin: 10px; /* Jarak di luar elemen */
+        border: 2px solid black; /* Garis tebal di sekeliling elemen */
+        padding: 15px; /* Jarak di dalam elemen */
+    }
+    ...
+</style>
+```
+
+### Jelaskan konsep *flex box* dan *grid layout* beserta kegunaannya!
+
+*Flex box* adalah tata letak satu dimensi yang menata elemen dalam suatu baris atau suatu kolom. *Flex box* dapat berguna untuk menyusun elemen-elemen pada *navigation bar* dan *card layout*.
+
+*Grid layout* adalah tata letak dua dimensi yang menata elemen pada suatu grid/matriks. *Grid layout* cocok digunakan untuk menata halaman yang kompleks seperti galeri foto.
+
+### Jelaskan bagaimana cara kamu mengimplementasikan *checklist* di atas secara *step-by-step* (bukan hanya sekadar mengikuti tutorial)!
+1. Implementasikan fungsi untuk menghapus dan *mengedit* product.
+    - Pada [views.py](main/views.py), saya membuat fungsi `create_product()` dan `edit_product()` sebagai fungsi yang berguna untuk membuat dan mengedit *product*.
+2. Kustomisasi halaman daftar product menjadi lebih menarik dan responsive.
+    - Pada [main.html](main/templates/main.html), saya menambahkan kondisi percabangan (`if`) berikut agar halaman daftar *product* akan menampilkan pesan bahwa belum ada *product* yang terdaftar (dan muka cewe anime 😋) jika pada aplikasi belum ada *product* yang tersimpan.
+        ```html
+        {% if not products %}
+        <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+            <img src="{% static 'image/cocoapusing.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+            <p class="text-center text-orange-600 mt-4">Belum ada data produk pada Tech Bazaar.</p>
+        </div>
+        ```
+    - Saya juga menambahkan kodisi tidak memenuhi (`else`) pada percabangannya agar menampilkan detil setiap *product* jika terdapat *product*.
+        ```html
+        {% else %}
+        <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
+            {% for product in products %}
+                {% include 'card_product.html' with product=product %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        ```
+    - Saya juga mengimplementasikan [`card_product.html`](main/templates/card_product.html) untuk memberi desain *product* yang akan ditampilkan pada halaman utama.
+3. Buatlah *navigation bar* (*navbar*) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran *device*, khususnya *mobile* dan *desktop*.
+    - Saya membuat berkas [naavbar.html](templates/navbar.html) untuk membuat *navbar*.
+    - Pada berkasnya, saya tambahkan potongan kode berikut.
+    ```html
+    {% if user.is_authenticated %}
+        <span class="text-orange-600 mr-4">Welcome, {{ user.username }}</span>
+        <a href="{% url 'main:show_main' %}" class="text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Home
+        </a>
+        <a href="{% url 'main:logout' %}" class="text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Logout
+        </a>
+    {% else %}
+        <a href="{% url 'main:login' %}" class="text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 mr-2">
+            Login
+        </a>
+        <a href="{% url 'main:register' %}" class="text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Register
+        </a>
+    {% endif %}
+    ```
+- Potongan kode tersebut berguna untuk menampilkan hal-hal berikut pada *navbar*:
+    * ucapan selamat datang
+    * tombol untuk kembali ke halaman utama
+    * tombol *logout* jika pengguna sudah *login*
+    * tombol *login* jika pengguna belum *login*
+    * tombol *register* jika pengguna belum *login*
