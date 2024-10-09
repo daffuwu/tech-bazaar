@@ -1,8 +1,11 @@
 # Tech Bazaar
+**Tautan Web:** [daffa-rayhan-techbazaar.pbp.cs.ui.ac.id](http://daffa-rayhan-techbazaar.pbp.cs.ui.ac.id/)
+
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
 - [Tugas 4](#tugas-4)
 - [Tugas 5](#tugas-5)
+- [Tugas 6](#tugas-6)
 ## Tugas 2
 ### Langkah-langkah mengimplementasikan *checklist* pada tugas 2
 - Buat  *virtual environment* dengan menjalankan perintah `python -m venv env` pada direktori yang diiginkan. Misal di direktori `tech-bazaar`.
@@ -487,3 +490,43 @@ Salah satu cara untuk mengimplementasikan ketiga hal tersebut adalah menggunakan
     * tombol *logout* jika pengguna sudah *login*
     * tombol *login* jika pengguna belum *login*
     * tombol *register* jika pengguna belum *login*
+
+## Tugas 6
+### Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+Berikut adalah beberapa manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web.
+1. ***Cross-Platform***
+
+    JavaScript dapat digunakan di berbagai platform dan perangkat, menjadikannya solusi fleksibel dan luas digunakan di berbagai perangkat.
+
+2. **Interaktivitas**
+
+    JavaScript memungkinkan pembuatan halaman web yang lebih interaktif, seperti animasi, tombol yang responsif, dan manipulasi elemen HTML tanpa perlu memuat ulang seluruh halaman.
+
+3. ***Asynchronous Programming***
+
+    JavaScript mendukung *asynchronous programming* melalui penggunaan teknik seperti `AJAX` dan `fetch()`, yang memungkinkan data diambil dari server secara dinamis tanpa memengaruhi pengalaman pengguna.
+
+### Jelaskan fungsi dari penggunaan `await` ketika kita menggunakan `fetch()`! Apa yang akan terjadi jika kita tidak menggunakan `await`?
+
+Kegunaan dari `await` ketika kita menggunakan `fetch()` adalah untuk menginisiasi *HTTP request* dan menunggu responsnya terlebih dahulu. Jika kita tidak menggunakan `await`, respons akan langsung diberikan tanpa menunggunya.
+
+### Mengapa kita perlu menggunakan decorator `csrf_exempt` pada *view* yang akan digunakan untuk AJAX `POST`?
+Decorator `csrf_exempt` membuat Django tidak perlu mengecek keberadaan `csrf_token` pada `POST` request yang dikirimkan ke fungsi ini. 
+
+### Pada tutorial PBP minggu ini, pembersihan data *input* pengguna dilakukan di belakang (*backend*) juga. Mengapa hal tersebut tidak dilakukan di *frontend* saja?
+Salah satu alasan pembersihan data *input* pengguna dilakukan di *backend* adalah karena *backend* memang bertanggung jawab atas keamanan. Pembersihan data *input* di *frontend* sebanarnya mungkin saja, namun *frontend* hanyalah sebagai tampilan yang disajikan kepada pengguna. Akibatnya jika data *input* kotor dihilangkan di *frontend*, data tersebut masih akan diakses oleh *backend*.
+
+### Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+1. Ubahlah kode cards data produk agar dapat mendukung AJAX `GET`.
+    - Pada [views.py](main/views.py), saya tambahkan fungsi `add_product_ajax()` sebagai fungsi yang berperan untuk menambahkan produk dengan AJAX.
+    - Pada [urls.py](main/urls.py), saya tambahkan *url* untuk `add_product_ajax()`.
+    - Pada [main.html](main/templates/main.html), saya buat beberapa elemen dan fungsi untuk bagian *frontend* agar dapat menambahkan produk dengan AJAX.
+2. Buatlah sebuah tombol yang membuka sebuah modal dengan form untuk menambahkan produk.
+    - Pada [main.html](main/templates/main.html), saya buat tombol yang dikaitkan fungsi `showModal()` yang berperan sebagai tombol untuk membuka modal.
+3. Buatlah fungsi *view* baru untuk menambahkan produk baru ke dalam basis data.
+    - Pada [views.py](main/views.py), saya tambahkan fungsi `add_product_ajax()` sebagai fungsi yang berperan untuk menambahkan produk dengan AJAX.
+4.  Buatlah *path* `/create-ajax/` yang mengarah ke fungsi *view* yang baru kamu buat.
+    - Pada [urls.py](main/urls.py), saya tambahkan *url* untuk `add_product_ajax()`.
+5. Hubungkan form yang telah kamu buat di dalam modal kamu ke *path* `/create-ajax/`.
+    - Pada [main.html](main/templates/main.html), di dalam `<script></script>` saya tambahkan fungsi `addProduct()` yang mengarah ke *path* fungsi penambahan produk dengan AJAX.
+    - Saya juga membuat beberapa fungsi lainnya agar produk yang dibuat dengan AJAX dapat ditampilkan di web. 
